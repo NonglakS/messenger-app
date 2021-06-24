@@ -27,7 +27,7 @@ router.post("/register", async (req, res, next) => {
       { expiresIn: 86400 }
     );
 
-    res.cookie("token", token, {httpOnly: true});
+    res.cookie("token", token, {httpOnly: true, maxAge: 86400});
 
     res.json({
       ...user.dataValues,
@@ -67,7 +67,7 @@ router.post("/login", async (req, res, next) => {
         process.env.SESSION_SECRET,
         { expiresIn: 86400 }
       );
-      res.cookie("token", token, {httpOnly: true});
+      res.cookie("token", token, {httpOnly: true, maxAge: 86400});
       res.json({
         ...user.dataValues,
         token,
