@@ -80,7 +80,6 @@ export const fetchConversations = () => async (dispatch) => {
 
 const saveMessage = async (body) => {
   const { data } = await axios.post("/api/messages", body);
-  console.log('response data from api', data)
 
   return data;
 };
@@ -100,10 +99,8 @@ export const postMessage = (body) => async(dispatch) => {
     const data = await saveMessage(body);
 
     if (!body.conversationId) {
-      console.log('calling addConversation')
       dispatch(addConversation(body.recipientId, data.message));
     } else {
-      console.log('calling setMessage with argument', data.message)
       dispatch(setNewMessage(data.message));
     }
 
