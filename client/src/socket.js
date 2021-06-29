@@ -4,9 +4,9 @@ import {
   setNewMessage,
   removeOfflineUser,
   addOnlineUser,
+  gotConversations,
 } from "./store/conversations";
-import onlineSocket from './onlineSocket';
-
+import onlineSocket from "./onlineSocket";
 
 const socket = io(window.location.origin);
 
@@ -19,10 +19,15 @@ socket.on("connect", () => {
   });
 
   socket.on("remove-offline-user", (id) => {
+    delete onlineSocket[id];
+    console.log("online socket", onlineSocket);
     store.dispatch(removeOfflineUser(id));
   });
   socket.on("new-message", (data) => {
     store.dispatch(setNewMessage(data.message, data.sender));
+  });
+  socket.on("update-message", (data) => {
+    store.dispatch(gotConversations(data));
   });
 });
 

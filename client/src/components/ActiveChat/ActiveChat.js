@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
 import { connect } from "react-redux";
+import onlineSocket from "./../../onlineSocket.js";
+import { updateMessageStatus } from "./../../store/utils/thunkCreators";
+import store from "./../../store";
 
 const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     flexGrow: 8,
-    flexDirection: "column"
+    flexDirection: "column",
   },
   chatContainer: {
     marginLeft: 41,
@@ -16,14 +19,28 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
-    justifyContent: "space-between"
-  }
+    justifyContent: "space-between",
+  },
 }));
 
 const ActiveChat = (props) => {
   const classes = useStyles();
   const { user } = props;
   const conversation = props.conversation || {};
+  const conversations = store.getState().conversations;
+
+  useEffect(() => {
+    console.log('cnver' , conversation)
+    console.log('from stae' , conversations)
+    if (Object.keys(conversation).length !== 0) {
+      if (
+        onlineSocket[conversation.otherUser.id] !== undefined &&
+        conversation.messages.length > 0
+      ) {
+        updateMessageStatus(conversation.otherUser.id, conversation.id);
+      }
+    }
+  }, [conversations]);
 
   return (
     <Box className={classes.root}>
@@ -57,8 +74,9 @@ const mapStateToProps = (state) => {
     conversation:
       state.conversations &&
       state.conversations.find(
-        (conversation) => conversation.otherUser.username === state.activeConversation
-      )
+        (conversation) =>
+          conversation.otherUser.username === state.activeConversation
+      ),
   };
 };
 

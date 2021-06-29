@@ -1,10 +1,10 @@
 const { Op } = require("sequelize");
 const db = require("../db");
 const Message = require("./message");
+const User = require("./user");
 
 const Conversation = db.define("conversation", {});
 const onlineUsers = require("./../../onlineUsers");
-const User = require("./user");
 
 // find conversation given two user Ids
 
@@ -33,9 +33,9 @@ Conversation.findConversationByUserId = async function (userId) {
       },
     },
     attributes: ["id"],
-    order: [[Message, "createdAt", "ASC"]],
+    order: [[Message, "createdAt", "DESC"]],
     include: [
-      { model: Message, order: ["createdAt", "ASC"] },
+      { model: Message, order: ["createdAt", "DESC"] },
       {
         model: User,
         as: "user1",

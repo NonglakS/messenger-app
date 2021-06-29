@@ -11,14 +11,16 @@ router.post("/", async (req, res, next) => {
     const senderId = req.user.id;
     const { recipientId, text, conversationId, sender } = req.body;
 
-
     // if we already know conversation id, we can save time and just add it to message and return
     if (conversationId) {
-
-      const isValidId = await validateConversation(conversationId, recipientId)
+      const isValidId = await validateConversation(conversationId, recipientId);
       //validate conversationId to match receiver id before adding message to db.
       if (isValidId) {
-        const message = await Message.create({ senderId, text, conversationId });
+        const message = await Message.create({
+          senderId,
+          text,
+          conversationId,
+        });
 
         return res.json({ message, sender, recipientId });
       } else {
@@ -48,7 +50,6 @@ router.post("/", async (req, res, next) => {
     });
 
     return res.json({ message, sender, recipientId });
-
   } catch (error) {
     next(error);
   }
@@ -56,14 +57,28 @@ router.post("/", async (req, res, next) => {
 
 //helper functions
 const validateConversation = async (conversationId, recipientId) => {
-  let conversation = await Conversation.findOne(
-    { where: { id: conversationId } }
-  );
+  let conversation = await Conversation.findOne({
+    where: { id: conversationId },
+  });
 
-  const result = recipientId === conversation.user1Id || recipientId === conversation.user2Id;
+  const result =
+    recipientId === conversation.user1Id ||
+    recipientId === conversation.user2Id;
   return result;
-}
+};
 
-
+router.put("/", async (req, res, next) => {
+  try {
+    const { senderId, conversationId } = req.body;
+    await Message.update(
+      { isRead: true },
+      { where: { senderId: senderId, conversationId: conversationId } }
+    );
+    const conversations = await Conversation.findConversationByUserId(senderId);
+    res.json(conversations);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

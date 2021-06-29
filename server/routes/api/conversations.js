@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { User, Conversation, Message } = require("../../db/models");
+const { Conversation } = require("../../db/models");
 const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
 
@@ -16,7 +16,7 @@ router.get("/", async (req, res, next) => {
     const conversations = await Conversation.findConversationByUserId(userId);
 
     res.json(conversations);
-    
+
   } catch (error) {
     next(error);
   }

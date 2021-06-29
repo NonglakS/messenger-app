@@ -7,6 +7,8 @@ import {
   setSearchedUsers,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
+import onlineSocket from './../../onlineSocket';
+
 
 
 // USER THUNK CREATORS
@@ -107,5 +109,27 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     dispatch(setSearchedUsers(data));
   } catch (error) {
     console.error(error);
+  }
+};
+
+
+const updateMessage = async (senderId, conversationId) => {
+  const { data } = await axios.put("/api/messages", {senderId, conversationId});
+
+  return data;
+};
+
+const sendUpdateMessage = (data, senderId) => {
+  socket.emit("update-message", data, senderId, onlineSocket[senderId]);
+};
+
+export const updateMessageStatus = async (senderId, conversationId) => {
+
+  try {
+    const updateConversation = await updateMessage(senderId, conversationId);
+    sendUpdateMessage(updateConversation, senderId);
+
+  } catch (error) {
+    console.log(error);
   }
 };
