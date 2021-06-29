@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
@@ -27,11 +27,15 @@ const ActiveChat = (props) => {
   const classes = useStyles();
   const { user } = props;
   const conversation = props.conversation || {};
-  const conversations = store.getState().conversations;
+  // const dispatch = store.dispatch();
+
+  // const [convo, setConvo] = useState();
+
+  // useEffect(() => {
+  //   setConvo(conversations);
+  // }, [conversations]);
 
   useEffect(() => {
-    console.log('cnver' , conversation)
-    console.log('from stae' , conversations)
     if (Object.keys(conversation).length !== 0) {
       if (
         onlineSocket[conversation.otherUser.id] !== undefined &&
@@ -40,7 +44,7 @@ const ActiveChat = (props) => {
         updateMessageStatus(conversation.otherUser.id, conversation.id);
       }
     }
-  }, [conversations]);
+  });
 
   return (
     <Box className={classes.root}>

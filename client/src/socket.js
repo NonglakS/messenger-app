@@ -5,7 +5,7 @@ import {
   removeOfflineUser,
   addOnlineUser,
   gotConversations,
-} from "./store/conversations";
+  updateMessage} from "./store/conversations";
 import onlineSocket from "./onlineSocket";
 
 const socket = io(window.location.origin);
@@ -28,6 +28,11 @@ socket.on("connect", () => {
   });
   socket.on("update-message", (data) => {
     store.dispatch(gotConversations(data));
+  });
+  socket.on("check-receiver-active-chat", (activeName, data, message) => {
+    if(activeName === store.getState().activeConversation){
+      store.dispatch(updateMessage(message));
+    }
   });
 });
 

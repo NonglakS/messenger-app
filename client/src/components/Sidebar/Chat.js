@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { updateMessageStatus } from "./../../store/utils/thunkCreators";
 import { Box } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { withStyles } from "@material-ui/core/styles";
@@ -20,9 +21,28 @@ const styles = {
 };
 
 class Chat extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      unReadCount: 0,
+      prevUnRead: 0,
+    };
+    this.sendReadStatus = this.sendReadStatus.bind(this);
+  }
+
   handleClick = async (conversation) => {
     await this.props.setActiveChat(conversation.otherUser.username);
+    this.sendReadStatus(conversation);
   };
+
+
+  sendReadStatus = (conversation) => {
+    //make sure there's conversation messages before updated status
+    if (conversation.messages.length !== 0) {
+      updateMessageStatus(conversation.otherUser.id, conversation.id);
+    }
+  }
+
 
   render() {
     const { classes } = this.props;

@@ -123,11 +123,23 @@ const sendUpdateMessage = (data, senderId) => {
   socket.emit("update-message", data, senderId, onlineSocket[senderId]);
 };
 
-export const updateMessageStatus = async (senderId, conversationId) => {
+const checkActiveChat = (receiverId, senderName, message) => {
+  socket.to(onlineSocket[receiverId]).emit("check-receiver-active-chat", senderName, socket.id, message)
+  //check of active chat
+};
+
+export const updateMessageStatus = async (senderId, conversationId, updateType, username) => {
 
   try {
-    const updateConversation = await updateMessage(senderId, conversationId);
-    sendUpdateMessage(updateConversation, senderId);
+    // if(updateType==="individual update"){
+    //   //TODO: check user.id scope
+    //   const { data } = await axios.get("/api/conversations");
+    //   checkActiveChat(senderId, username, data[conversationId][data.conversationId.length-1])
+
+    // } else {
+      const updateConversation = await updateMessage(senderId, conversationId);
+      sendUpdateMessage(updateConversation, senderId);
+    // }
 
   } catch (error) {
     console.log(error);
