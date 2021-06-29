@@ -21,7 +21,7 @@ const styles = {
 };
 
 class Chat extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       unReadCount: 0,
@@ -35,14 +35,12 @@ class Chat extends Component {
     this.sendReadStatus(conversation);
   };
 
-
   sendReadStatus = (conversation) => {
     //make sure there's conversation messages before updated status
     if (conversation.messages.length !== 0) {
       updateMessageStatus(conversation.otherUser.id, conversation.id);
     }
-  }
-
+  };
 
   render() {
     const { classes } = this.props;

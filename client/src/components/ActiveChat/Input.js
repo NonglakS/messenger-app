@@ -3,8 +3,6 @@ import { FormControl, FilledInput } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { postMessage } from "../../store/utils/thunkCreators";
-import { updateMessageStatus } from "./../../store/utils/thunkCreators";
-import onlineSocket from "./../../onlineSocket.js";
 
 const styles = {
   root: {
@@ -46,17 +44,6 @@ class Input extends Component {
     this.setState({
       text: "",
     });
-
-    //check if the receiver is online and update read status
-    // if (onlineSocket[this.props.otherUser.id] !== undefined) {
-
-    //   await updateMessageStatus(
-    //     this.props.otherUser.id,
-    //     this.props.conversationId,
-    //     // "individual update",
-    //     // this.props.user.username
-    //   );
-    // }
   };
 
   render() {

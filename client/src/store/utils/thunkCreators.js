@@ -7,9 +7,7 @@ import {
   setSearchedUsers,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
-import onlineSocket from './../../onlineSocket';
-
-
+import onlineSocket from "./../../onlineSocket";
 
 // USER THUNK CREATORS
 
@@ -87,7 +85,7 @@ const sendMessage = (data, body) => {
 
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
-export const postMessage = (body) => async(dispatch) => {
+export const postMessage = (body) => async (dispatch) => {
   try {
     const data = await saveMessage(body);
 
@@ -112,9 +110,11 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-
 const updateMessage = async (senderId, conversationId) => {
-  const { data } = await axios.put("/api/messages", {senderId, conversationId});
+  const { data } = await axios.put("/api/messages", {
+    senderId,
+    conversationId,
+  });
 
   return data;
 };
@@ -123,24 +123,16 @@ const sendUpdateMessage = (data, senderId) => {
   socket.emit("update-message", data, senderId, onlineSocket[senderId]);
 };
 
-const checkActiveChat = (receiverId, senderName, message) => {
-  socket.to(onlineSocket[receiverId]).emit("check-receiver-active-chat", senderName, socket.id, message)
-  //check of active chat
-};
-
-export const updateMessageStatus = async (senderId, conversationId, updateType, username) => {
-
+export const updateMessageStatus = async (
+  senderId,
+  conversationId,
+  updateType,
+  username
+) => {
   try {
-    // if(updateType==="individual update"){
-    //   //TODO: check user.id scope
-    //   const { data } = await axios.get("/api/conversations");
-    //   checkActiveChat(senderId, username, data[conversationId][data.conversationId.length-1])
-
-    // } else {
-      const updateConversation = await updateMessage(senderId, conversationId);
-      sendUpdateMessage(updateConversation, senderId);
-    // }
-
+    console.log('--------online user', username, onlineSocket)
+    const updateConversation = await updateMessage(senderId, conversationId);
+    sendUpdateMessage(updateConversation, senderId);
   } catch (error) {
     console.log(error);
   }

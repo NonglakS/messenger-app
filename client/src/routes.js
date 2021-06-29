@@ -32,7 +32,7 @@ const Routes = (props) => {
   }
 
   return (
-    <>
+    <React.Fragment>
       {snackBarOpen && (
         <SnackbarError
           setSnackBarOpen={setSnackBarOpen}
@@ -50,7 +50,7 @@ const Routes = (props) => {
         />
         <Route path="/home" component={Home} />
       </Switch>
-    </>
+    </React.Fragment>
   );
 };
 

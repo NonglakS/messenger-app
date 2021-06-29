@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
 import { connect } from "react-redux";
 import onlineSocket from "./../../onlineSocket.js";
 import { updateMessageStatus } from "./../../store/utils/thunkCreators";
-import store from "./../../store";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,13 +26,6 @@ const ActiveChat = (props) => {
   const classes = useStyles();
   const { user } = props;
   const conversation = props.conversation || {};
-  // const dispatch = store.dispatch();
-
-  // const [convo, setConvo] = useState();
-
-  // useEffect(() => {
-  //   setConvo(conversations);
-  // }, [conversations]);
 
   useEffect(() => {
     if (Object.keys(conversation).length !== 0) {
@@ -49,7 +41,7 @@ const ActiveChat = (props) => {
   return (
     <Box className={classes.root}>
       {conversation.otherUser && (
-        <>
+        <React.Fragment>
           <Header
             username={conversation.otherUser.username}
             online={conversation.otherUser.online || false}
@@ -66,7 +58,7 @@ const ActiveChat = (props) => {
               user={user}
             />
           </Box>
-        </>
+        </React.Fragment>
       )}
     </Box>
   );
