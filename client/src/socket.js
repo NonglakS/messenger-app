@@ -5,13 +5,16 @@ import {
   removeOfflineUser,
   addOnlineUser,
 } from "./store/conversations";
+import onlineSocket from './onlineSocket';
+
 
 const socket = io(window.location.origin);
 
 socket.on("connect", () => {
   console.log("connected to server");
 
-  socket.on("add-online-user", (id) => {
+  socket.on("add-online-user", (id, socketId) => {
+    onlineSocket[id] = socketId;
     store.dispatch(addOnlineUser(id));
   });
 
