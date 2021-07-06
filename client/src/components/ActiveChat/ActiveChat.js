@@ -33,7 +33,7 @@ const ActiveChat = (props) => {
         onlineSocket[conversation.otherUser.id] !== undefined &&
         conversation.messages.length > 0
       ) {
-        updateMessageStatus(conversation.otherUser.id, conversation.id);
+       // updateMessageStatus(conversation.otherUser.id, conversation.id);
       }
     }
   });

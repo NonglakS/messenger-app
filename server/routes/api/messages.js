@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Conversation, Message } = require("../../db/models");
+const { Conversation, Message, User } = require("../../db/models");
 const onlineUsers = require("../../onlineUsers");
 
 // expects {recipientId, text, conversationId } in body (conversationId will be null if no conversation exists yet)
@@ -74,8 +74,9 @@ router.put("/", async (req, res, next) => {
       { isRead: true },
       { where: { senderId: senderId, conversationId: conversationId } }
     );
+    const user = await User.getSocket(senderId);
     const conversations = await Conversation.findConversationByUserId(senderId);
-    res.json(conversations);
+    res.json({ conversations: conversations, socket: user.socketId });
   } catch (error) {
     next(error);
   }

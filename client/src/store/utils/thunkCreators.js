@@ -28,7 +28,7 @@ export const fetchUser = () => async (dispatch) => {
 
 export const register = (credentials) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/auth/register", credentials);
+    const { data } = await axios.post("/auth/register", credentials, {params:{socketId:socket.id}});
     dispatch(gotUser(data));
     socket.emit("go-online", data.id, socket.id);
   } catch (error) {
@@ -39,7 +39,7 @@ export const register = (credentials) => async (dispatch) => {
 
 export const login = (credentials) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/auth/login", credentials);
+    const { data } = await axios.post("/auth/login", credentials, {params:{socketId:socket.id}});
     dispatch(gotUser(data));
     socket.emit("go-online", data.id, socket.id);
   } catch (error) {
@@ -50,7 +50,7 @@ export const login = (credentials) => async (dispatch) => {
 
 export const logout = (id) => async (dispatch) => {
   try {
-    await axios.delete("/auth/logout");
+    await axios.delete("/auth/logout",{params:{id:id}});
     dispatch(gotUser({}));
     socket.emit("logout", id);
   } catch (error) {
@@ -119,20 +119,21 @@ const updateMessage = async (senderId, conversationId) => {
   return data;
 };
 
-const sendUpdateMessage = (data, senderId) => {
-  socket.emit("update-message", data, senderId, onlineSocket[senderId]);
+const sendUpdateMessage = (data, senderSocket) => {
+  socket.emit("update-message", data, senderSocket);
 };
 
 export const updateMessageStatus = async (
   senderId,
-  conversationId,
-  updateType,
-  username
+  conversationId
 ) => {
   try {
-    console.log('--------online user', username, onlineSocket)
-    const updateConversation = await updateMessage(senderId, conversationId);
-    sendUpdateMessage(updateConversation, senderId);
+    const data = await updateMessage(senderId, conversationId);
+    //only send send update-message if the sender is online
+    if(data.socket){
+      console.log('------check-->', data.socket)
+      sendUpdateMessage(data.conversations, data.socket);
+    }
   } catch (error) {
     console.log(error);
   }
