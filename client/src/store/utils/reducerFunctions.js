@@ -87,7 +87,9 @@ export const updateMessageInStore = (state, converId) => {
     if (convo.id === converId) {
       const convoCopy = { ...convo };
       convoCopy.messages.map((message) => {
-        return (message.isRead = true);
+        if (convo.otherUser.id === message.senderId) {
+          return (message.isRead = true);
+        }
       });
       return convoCopy;
     } else {

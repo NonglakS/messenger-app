@@ -69,7 +69,7 @@ export const addConversation = (recipientId, newMessage) => {
   };
 };
 
-export const updateStatus = (conversationId) => {
+export const updateStatus = (conversationId, userId) => {
   return {
     type: UPDATE_MESSAGE_STATUS,
     conversationId,

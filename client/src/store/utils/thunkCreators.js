@@ -7,7 +7,6 @@ import {
   setSearchedUsers,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
-import onlineSocket from "./../../onlineSocket";
 
 // USER THUNK CREATORS
 
@@ -28,7 +27,9 @@ export const fetchUser = () => async (dispatch) => {
 
 export const register = (credentials) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/auth/register", credentials, {params:{socketId:socket.id}});
+    const { data } = await axios.post("/auth/register", credentials, {
+      params: { socketId: socket.id },
+    });
     dispatch(gotUser(data));
     socket.emit("go-online", data.id, socket.id);
   } catch (error) {
@@ -39,7 +40,9 @@ export const register = (credentials) => async (dispatch) => {
 
 export const login = (credentials) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/auth/login", credentials, {params:{socketId:socket.id}});
+    const { data } = await axios.post("/auth/login", credentials, {
+      params: { socketId: socket.id },
+    });
     dispatch(gotUser(data));
     socket.emit("go-online", data.id, socket.id);
   } catch (error) {
@@ -50,7 +53,7 @@ export const login = (credentials) => async (dispatch) => {
 
 export const logout = (id) => async (dispatch) => {
   try {
-    await axios.delete("/auth/logout",{params:{id:id}});
+    await axios.delete("/auth/logout", { params: { id: id } });
     dispatch(gotUser({}));
     socket.emit("logout", id);
   } catch (error) {
@@ -110,7 +113,7 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-const updateMessage = async (senderId, conversationId) =>{
+const updateMessage = async (senderId, conversationId) => {
   const { data } = await axios.put("/api/messages", {
     senderId,
     conversationId,
@@ -119,21 +122,14 @@ const updateMessage = async (senderId, conversationId) =>{
 };
 
 const sendUpdateMessage = (data, senderSocket) => {
-  console.log('----luanching socket')
   socket.emit("update-message", data, senderSocket);
-
 };
 
-export const updateMessageStatus = async(
-  senderId,
-  conversationId
-) =>{
+export const updateMessageStatus = async (senderId, conversationId) => {
   try {
-
     const data = await updateMessage(senderId, conversationId);
     //only send send update-message if the sender is online
-    if(data.socket){
-      console.log('------check-->', data.socket)
+    if (data.socket) {
       await sendUpdateMessage(data.conversations, data.socket);
     }
   } catch (error) {

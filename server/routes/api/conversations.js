@@ -16,7 +16,6 @@ router.get("/", async (req, res, next) => {
     const conversations = await Conversation.findConversationByUserId(userId);
 
     res.json(conversations);
-
   } catch (error) {
     next(error);
   }

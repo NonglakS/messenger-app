@@ -74,7 +74,7 @@ router.put("/", async (req, res, next) => {
       { isRead: true },
       { where: { senderId: senderId, conversationId: conversationId } }
     );
-    const user = await User.getSocket(senderId);
+    const user = await User.getUser(senderId);
     const conversations = await Conversation.findConversationByUserId(senderId);
     res.json({ conversations: conversations, socket: user.socketId });
   } catch (error) {

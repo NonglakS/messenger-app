@@ -91,7 +91,7 @@ User.removeSocket = async function (id) {
   }
 };
 
-User.getSocket = async function (id) {
+User.getUser = async function (id) {
   var user;
   try {
     user = await User.findOne({ where: { id: id } });

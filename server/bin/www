@@ -21,7 +21,7 @@ const port = normalizePort(process.env.PORT || "3001");
 app.set("port", port);
 
 /**
- * Create HTTP server.
+ * Create HTTP server
  */
 
 const server = http.createServer(app);
@@ -46,10 +46,12 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("add-online-user", id, socketId);
   });
 
-  socket.on("new-message", (data) => {
+  socket.on("new-message", async (data) => {
+    const sender = await User.getUser(data.message.senderId);
     socket.broadcast.emit("new-message", {
       message: data.message,
       sender: data.sender,
+      senderUsername: sender.username,
     });
   });
 
@@ -61,9 +63,21 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("update-message", async (updateConversation, socketId) => {
-    socket.to(socketId).emit("update-message", updateConversation);
+  socket.on("update-message", async (updateConversation, senderSocket) => {
+    socket.to(senderSocket).emit("send-update-message", updateConversation);
   });
+
+  socket.on(
+    "check-message-status-by-active-user",
+    async (sender, otherUserId, conversationId) => {
+      if (onlineUsers.indexOf(otherUserId) >= 0) {
+        const user = await User.getUser(otherUserId);
+        socket
+          .to(user.socketId)
+          .emit("update-message-status-by-active-user", sender, conversationId);
+      }
+    }
+  );
 });
 
 sessionStore

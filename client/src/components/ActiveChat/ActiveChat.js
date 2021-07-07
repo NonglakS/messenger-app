@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
 import { connect } from "react-redux";
-import onlineSocket from "./../../onlineSocket.js";
-import { updateMessageStatus } from "./../../store/utils/thunkCreators";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -26,17 +24,6 @@ const ActiveChat = (props) => {
   const classes = useStyles();
   const { user } = props;
   const conversation = props.conversation || {};
-
-  // useEffect(() => {
-  //   if (Object.keys(conversation).length !== 0) {
-  //     if (
-  //       onlineSocket[conversation.otherUser.id] !== undefined &&
-  //       conversation.messages.length > 0
-  //     ) {
-  //      // updateMessageStatus(conversation.otherUser.id, conversation.id);
-  //     }
-  //   }
-  // });
 
   return (
     <Box className={classes.root}>
