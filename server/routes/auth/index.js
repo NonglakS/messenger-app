@@ -30,7 +30,7 @@ router.post("/register", async (req, res, next) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      //  maxAge: 86400
+       maxAge: 86400
     });
 
     res.json({
@@ -75,7 +75,7 @@ router.post("/login", async (req, res, next) => {
       );
       res.cookie("token", token, {
         httpOnly: true,
-        //maxAge: 86400
+        maxAge: 86400
       });
       res.json({
         ...user.dataValues,
