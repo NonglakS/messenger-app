@@ -110,29 +110,31 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-const updateMessage = async (senderId, conversationId) => {
+const updateMessage = async (senderId, conversationId) =>{
   const { data } = await axios.put("/api/messages", {
     senderId,
     conversationId,
   });
-
   return data;
 };
 
 const sendUpdateMessage = (data, senderSocket) => {
+  console.log('----luanching socket')
   socket.emit("update-message", data, senderSocket);
+
 };
 
-export const updateMessageStatus = async (
+export const updateMessageStatus = async(
   senderId,
   conversationId
-) => {
+) =>{
   try {
+
     const data = await updateMessage(senderId, conversationId);
     //only send send update-message if the sender is online
     if(data.socket){
       console.log('------check-->', data.socket)
-      sendUpdateMessage(data.conversations, data.socket);
+      await sendUpdateMessage(data.conversations, data.socket);
     }
   } catch (error) {
     console.log(error);

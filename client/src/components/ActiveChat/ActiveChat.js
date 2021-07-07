@@ -27,16 +27,16 @@ const ActiveChat = (props) => {
   const { user } = props;
   const conversation = props.conversation || {};
 
-  useEffect(() => {
-    if (Object.keys(conversation).length !== 0) {
-      if (
-        onlineSocket[conversation.otherUser.id] !== undefined &&
-        conversation.messages.length > 0
-      ) {
-       // updateMessageStatus(conversation.otherUser.id, conversation.id);
-      }
-    }
-  });
+  // useEffect(() => {
+  //   if (Object.keys(conversation).length !== 0) {
+  //     if (
+  //       onlineSocket[conversation.otherUser.id] !== undefined &&
+  //       conversation.messages.length > 0
+  //     ) {
+  //      // updateMessageStatus(conversation.otherUser.id, conversation.id);
+  //     }
+  //   }
+  // });
 
   return (
     <Box className={classes.root}>

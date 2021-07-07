@@ -4,6 +4,7 @@ import { Box } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { withStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
+import { updateStatus } from "../../store/conversations";
 import { connect } from "react-redux";
 
 const styles = {
@@ -48,6 +49,7 @@ class Chat extends Component {
     //make sure there's conversation messages before updated status
     if (conversation.messages.length !== 0) {
       updateMessageStatus(conversation.otherUser.id, conversation.id);
+      this.props.updateStatus(conversation.id);
     }
   };
 
@@ -120,6 +122,10 @@ const mapDispatchToProps = (dispatch) => {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
     },
+    updateStatus:(conversationId)=>{
+      dispatch(updateStatus(conversationId));
+    }
+
   };
 };
 
