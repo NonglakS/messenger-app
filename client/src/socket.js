@@ -6,10 +6,9 @@ import {
   addOnlineUser,
 } from "./store/conversations";
 
-//only connect socket after login/register
 const socket = io(window.location.origin);
 
-socket.on("connect", (socketId) => {
+socket.on("connect", () => {
   console.log("connected to server");
   socket.on("add-online-user", (id) => {
     store.dispatch(addOnlineUser(id));
