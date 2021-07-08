@@ -8,7 +8,6 @@ import {
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
-
 // USER THUNK CREATORS
 
 export const fetchUser = () => async (dispatch) => {
@@ -17,7 +16,7 @@ export const fetchUser = () => async (dispatch) => {
     const { data } = await axios.get("/auth/user");
     dispatch(gotUser(data));
     if (data.id) {
-      socket.emit("go-online", data.id);
+      socket.emit("go-online", data.id, socket.id);
     }
   } catch (error) {
     console.error(error);
@@ -28,10 +27,12 @@ export const fetchUser = () => async (dispatch) => {
 
 export const register = (credentials) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/auth/register", credentials);
+    const { data } = await axios.post("/auth/register", credentials, {
+      params: { socketId: socket.id },
+    });
     dispatch(gotUser(data));
     socket.connect();
-    socket.emit("go-online", data.id);
+    socket.emit("go-online", data.id, socket.id);
   } catch (error) {
     console.error(error);
     dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
@@ -40,10 +41,12 @@ export const register = (credentials) => async (dispatch) => {
 
 export const login = (credentials) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/auth/login", credentials);
+    const { data } = await axios.post("/auth/login", credentials, {
+      params: { socketId: socket.id },
+    });
     dispatch(gotUser(data));
     socket.connect();
-    socket.emit("go-online", data.id);
+    socket.emit("go-online", data.id, socket.id);
   } catch (error) {
     console.error(error);
     dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
@@ -52,7 +55,7 @@ export const login = (credentials) => async (dispatch) => {
 
 export const logout = (id) => async (dispatch) => {
   try {
-    await axios.delete("/auth/logout");
+    await axios.delete("/auth/logout", { params: { id: id } });
     dispatch(gotUser({}));
     socket.emit("logout", id);
   } catch (error) {
@@ -87,7 +90,7 @@ const sendMessage = (data, body) => {
 
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
-export const postMessage = (body) => async(dispatch) => {
+export const postMessage = (body) => async (dispatch) => {
   try {
     const data = await saveMessage(body);
 
