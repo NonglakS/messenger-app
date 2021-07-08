@@ -36,7 +36,7 @@ const User = db.define("user", {
     },
   },
   socketId: {
-    type: Sequelize.STRING,
+    type: Sequelize.ARRAY(Sequelize.TEXT),
     unique: true,
     allowNull: true,
   },
@@ -74,15 +74,28 @@ User.beforeBulkCreate((users) => {
 //function to save socketId
 User.updateSocket = async function (id, socketId) {
   try {
-    await User.update({ socketId: socketId }, { where: { id: id } });
+    await User.update(
+      {
+        socketId: Sequelize.fn(
+          "array_append",
+          Sequelize.col("socketId"),
+          socketId
+        ),
+      },
+      { where: { id: id } }
+    );
   } catch (err) {
     console.log(err);
   }
 };
 
-User.removeSocket = async function (id) {
+User.removeSocket = async function (id, socketId) {
   try {
-    await User.update({ socketId: null }, { where: { id: id } });
+    const user = await User.getUser(id);
+    let socketArray = user.socketId;
+    const removeIndex = socketArray.indexOf(socketId);
+    socketArray.splice(removeIndex, 1);
+    await User.update({ socketId: socketArray }, { where: { id: id } });
   } catch (err) {
     console.log(err);
   }
@@ -90,8 +103,8 @@ User.removeSocket = async function (id) {
 
 User.getUser = async function (id) {
   try {
-     const user = await User.findOne({ where: { id: id } });
-     return user;
+    const user = await User.findOne({ where: { id: id } });
+    return user;
   } catch (err) {
     console.log(err);
   }

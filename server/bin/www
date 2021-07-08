@@ -59,20 +59,28 @@ io.on("connection", async (socket) => {
 
   socket.on("new-message", async (data) => {
     const recipient = await User.getUser(data.recipientId);
-    socket.to(recipient.socketId).emit("new-message", {
-      message: data.message,
-      sender: data.sender,
-    });
+    if (recipient.socketId !== null && recipient.socketId.length > 0) {
+      recipient.socketId.map((to) => {
+        socket.to(to).emit("new-message", {
+          message: data.message,
+          sender: data.sender,
+        });
+      });
+    }
   });
 
-  socket.on("logout", (id) => {
+  socket.on("logout", async (id, socketId) => {
+    const currentUser = await User.getUser(id);
+    await User.removeSocket(id, socketId);
+
     if (onlineUsers.includes(id)) {
-      userIndex = onlineUsers.indexOf(id);
-      onlineUsers.splice(userIndex, 1);
-      User.removeSocket(id);
-      socket.broadcast.emit("remove-offline-user", id);
-      socket.disconnect();
+      if (currentUser.socketId.length === 1) {
+        userIndex = onlineUsers.indexOf(id);
+        onlineUsers.splice(userIndex, 1);
+        socket.broadcast.emit("remove-offline-user", id);
+      }
     }
+    socket.disconnect();
   });
 });
 
