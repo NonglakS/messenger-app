@@ -69,6 +69,9 @@ const validateConversation = async (conversationId, recipientId) => {
 
 router.put("/", async (req, res, next) => {
   try {
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
     const { senderId, conversationId } = req.body;
     await Message.update(
       { isRead: true },
