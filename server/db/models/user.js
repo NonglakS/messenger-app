@@ -72,12 +72,11 @@ User.beforeBulkCreate((users) => {
 });
 
 //function to save socketId
-User.updateSocket = async function (username, socketId) {
+User.updateSocket = async function (id, socketId) {
   try {
-    await User.update(
-      { socketId: socketId },
-      { where: { username: username } }
-    );
+    await User.update({ socketId: socketId }, { where: { id: id } });
+
+    console.log(await User.findOne({ where: { id: id } }));
   } catch (err) {
     console.log(err);
   }

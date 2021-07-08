@@ -27,11 +27,8 @@ export const fetchUser = () => async (dispatch) => {
 
 export const register = (credentials) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/auth/register", credentials, {
-      params: { socketId: socket.id },
-    });
+    const { data } = await axios.post("/auth/register", credentials);
     dispatch(gotUser(data));
-    socket.connect();
     socket.emit("go-online", data.id, socket.id);
   } catch (error) {
     console.error(error);
@@ -41,11 +38,8 @@ export const register = (credentials) => async (dispatch) => {
 
 export const login = (credentials) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/auth/login", credentials, {
-      params: { socketId: socket.id },
-    });
+    const { data } = await axios.post("/auth/login", credentials);
     dispatch(gotUser(data));
-    socket.connect();
     socket.emit("go-online", data.id, socket.id);
   } catch (error) {
     console.error(error);
@@ -55,7 +49,7 @@ export const login = (credentials) => async (dispatch) => {
 
 export const logout = (id) => async (dispatch) => {
   try {
-    await axios.delete("/auth/logout", { params: { id: id } });
+    await axios.delete("/auth/logout");
     dispatch(gotUser({}));
     socket.emit("logout", id);
   } catch (error) {
