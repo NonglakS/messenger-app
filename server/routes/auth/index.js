@@ -20,6 +20,7 @@ router.post("/register", async (req, res, next) => {
     }
 
     const user = await User.create(req.body);
+    await User.updateSocket(user.username, req.query.socketId);
 
     const token = jwt.sign(
       { id: user.dataValues.id },
@@ -27,7 +28,7 @@ router.post("/register", async (req, res, next) => {
       { expiresIn: 86400 }
     );
 
-    res.cookie("token", token, {httpOnly: true, maxAge: 86400});
+    res.cookie("token", token, { httpOnly: true, maxAge: 86400 });
 
     res.json({
       ...user.dataValues,
@@ -48,7 +49,8 @@ router.post("/login", async (req, res, next) => {
     const { username, password } = req.body;
     if (!username || !password)
       return res.status(400).json({ error: "Username and password required" });
-
+    //update socketId
+    await User.updateSocket(username, req.query.socketId);
     const user = await User.findOne({
       where: {
         username: req.body.username,
@@ -67,7 +69,7 @@ router.post("/login", async (req, res, next) => {
         process.env.SESSION_SECRET,
         { expiresIn: 86400 }
       );
-      res.cookie("token", token, {httpOnly: true, maxAge: 86400});
+      res.cookie("token", token, { httpOnly: true, maxAge: 86400 });
       res.json({
         ...user.dataValues,
         token,
@@ -78,7 +80,9 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.delete("/logout", (req, res, next) => {
+router.delete("/logout", async (req, res, next) => {
+  const { id } = req.query;
+  await User.removeSocket(id);
   res.clearCookie("token");
   res.sendStatus(204);
 });

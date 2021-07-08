@@ -11,6 +11,7 @@ const { app, sessionStore } = require("../app");
 const http = require("http");
 const db = require("../db");
 const onlineUsers = require("../onlineUsers");
+const { User } = require("../db/models");
 
 /**
  * Get port from environment and store in Express.
@@ -32,8 +33,8 @@ const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "DELETE", "PUT"]
-  }
+    methods: ["GET", "POST", "DELETE", "PUT"],
+  },
 });
 
 io.on("connection", (socket) => {
@@ -45,8 +46,9 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("add-online-user", id);
   });
 
-  socket.on("new-message", (data) => {
-    socket.broadcast.emit("new-message", {
+  socket.on("new-message", async (data) => {
+    const recipient = await User.getUser(data.recipientId);
+    socket.to(recipient.socketId).emit("new-message", {
       message: data.message,
       sender: data.sender,
     });
