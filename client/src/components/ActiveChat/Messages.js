@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Box } from "@material-ui/core";
 import { SenderBubble, OtherUserBubble } from "../ActiveChat";
 import moment from "moment";
 
 const Messages = (props) => {
   const { messages, otherUser, userId } = props;
-  const messageList = messages.sort(function (x, y) {
-    return x.id - y.id;
-  });
+
+  const messageList = useMemo(() => {
+    return messages.sort(function (x, y) {
+      return x.id - y.id;
+    });
+  }, [messages]);
 
   const [lastReadIndex, setLastReadIndex] = useState(-1);
 

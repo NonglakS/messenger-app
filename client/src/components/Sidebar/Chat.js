@@ -6,6 +6,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
 import { updateStatus } from "../../store/conversations";
 import { connect } from "react-redux";
+import helperFunctions from "../componentHelperFunc";
 
 const styles = {
   root: {
@@ -28,7 +29,6 @@ class Chat extends Component {
       unReadCount: 0,
     };
     this.sendReadStatus = this.sendReadStatus.bind(this);
-    this.unReadCount = this.unReadCount.bind(this);
   }
 
   handleClick = async (conversation) => {
@@ -47,26 +47,13 @@ class Chat extends Component {
     }
   };
 
-  unReadCount = () => {
+  componentDidMount() {
     const { messages } = this.props.conversation;
     const otherUser = this.props.conversation.otherUser;
-    let count = 0;
-
-    for (let i = 0; i < messages.length; i++) {
-      if (messages[i].senderId === otherUser.id) {
-        if (!messages[i].isRead) {
-          count++;
-        }
-      }
-    }
-
+    const count = helperFunctions.unReadCount(messages, otherUser);
     this.setState({
       unReadCount: count,
     });
-  };
-
-  componentDidMount() {
-    this.unReadCount();
   }
 
   componentDidUpdate(prevProps) {
@@ -80,7 +67,10 @@ class Chat extends Component {
         updateMessageStatus(otherUser.id, this.props.conversation.id);
       }
     } else if (this.props.conversation !== prevProps.conversation) {
-      this.unReadCount();
+      const count = helperFunctions.unReadCount(messages, otherUser);
+      this.setState({
+        unReadCount: count,
+      });
     }
   }
 
