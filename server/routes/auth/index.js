@@ -77,8 +77,7 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.delete("/logout", async (req, res, next) => {
-  const { id } = req.query;
+router.delete("/logout", (req, res, next) => {
   res.clearCookie("token");
   res.sendStatus(204);
 });
