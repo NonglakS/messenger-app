@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Box } from "@material-ui/core";
 import { SenderBubble, OtherUserBubble } from "../ActiveChat";
 import moment from "moment";
@@ -14,7 +14,7 @@ const Messages = (props) => {
 
   const [lastReadIndex, setLastReadIndex] = useState(-1);
 
-  const lastSeenMessage = () => {
+  useMemo(() => {
     let lastIndex = -1;
     for (let i = 0; i < messages.length; i++) {
       if (
@@ -26,11 +26,7 @@ const Messages = (props) => {
       }
       setLastReadIndex(lastIndex);
     }
-  };
-
-  useEffect(() => {
-    lastSeenMessage();
-  }, [messages]);
+  }, [messages, userId]);
 
   return (
     <Box>
