@@ -37,13 +37,23 @@ const io = require("socket.io")(server, {
   },
 });
 
-io.on("connection", (socket) => {
-  socket.on("go-online", (id, socketId) => {
+io.use((socket, next) => {
+  const userId = socket.handshake.auth.userId;
+  if (!userId) {
+    return next(new Error("invalid username"));
+  }
+  socket.userId = userId;
+  next();
+});
+
+io.on("connection", async (socket) => {
+  await User.updateSocket(socket.userId, socket.id);
+
+  socket.on("go-online", (id) => {
     if (!onlineUsers.includes(id)) {
       onlineUsers.push(id);
     }
     // send the user who just went online to everyone else who is already online
-    await User.updateSocket(id, socketId);
     socket.broadcast.emit("add-online-user", id);
   });
 
@@ -61,6 +71,7 @@ io.on("connection", (socket) => {
       onlineUsers.splice(userIndex, 1);
       User.removeSocket(id);
       socket.broadcast.emit("remove-offline-user", id);
+      socket.disconnect();
     }
   });
 });

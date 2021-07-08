@@ -75,8 +75,6 @@ User.beforeBulkCreate((users) => {
 User.updateSocket = async function (id, socketId) {
   try {
     await User.update({ socketId: socketId }, { where: { id: id } });
-
-    console.log(await User.findOne({ where: { id: id } }));
   } catch (err) {
     console.log(err);
   }
@@ -91,13 +89,12 @@ User.removeSocket = async function (id) {
 };
 
 User.getUser = async function (id) {
-  var user;
   try {
-    user = await User.findOne({ where: { id: id } });
+     const user = await User.findOne({ where: { id: id } });
+     return user;
   } catch (err) {
     console.log(err);
   }
-  return user;
 };
 
 module.exports = User;

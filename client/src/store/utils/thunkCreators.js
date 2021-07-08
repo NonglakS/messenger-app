@@ -16,7 +16,7 @@ export const fetchUser = () => async (dispatch) => {
     const { data } = await axios.get("/auth/user");
     dispatch(gotUser(data));
     if (data.id) {
-      socket.emit("go-online", data.id, socket.id);
+      socket.emit("go-online", data.id);
     }
   } catch (error) {
     console.error(error);
@@ -29,7 +29,10 @@ export const register = (credentials) => async (dispatch) => {
   try {
     const { data } = await axios.post("/auth/register", credentials);
     dispatch(gotUser(data));
-    socket.emit("go-online", data.id, socket.id);
+    //connect socket only after authentication
+    socket.auth = { userId: data.id };
+    socket.connect();
+    socket.emit("go-online", data.id);
   } catch (error) {
     console.error(error);
     dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
@@ -40,7 +43,10 @@ export const login = (credentials) => async (dispatch) => {
   try {
     const { data } = await axios.post("/auth/login", credentials);
     dispatch(gotUser(data));
-    socket.emit("go-online", data.id, socket.id);
+    //connect socket only after authentication
+    socket.auth = { userId: data.id };
+    socket.connect();
+    socket.emit("go-online", data.id);
   } catch (error) {
     console.error(error);
     dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
