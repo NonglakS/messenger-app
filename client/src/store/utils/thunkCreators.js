@@ -30,7 +30,7 @@ export const register = (credentials) => async (dispatch) => {
     const { data } = await axios.post("/auth/register", credentials);
     dispatch(gotUser(data));
     //connect socket only after authentication
-    socket.auth = { userId: data.id };
+    socket.auth = { token: data.token, userId: data.id };
     socket.connect();
     socket.emit("go-online", data.id);
   } catch (error) {
@@ -43,8 +43,7 @@ export const login = (credentials) => async (dispatch) => {
   try {
     const { data } = await axios.post("/auth/login", credentials);
     dispatch(gotUser(data));
-    //connect socket only after authentication
-    socket.auth = { userId: data.id };
+    socket.auth = { token: data.token, userId: data.id };
     socket.connect();
     socket.emit("go-online", data.id);
   } catch (error) {

@@ -38,8 +38,9 @@ const io = require("socket.io")(server, {
 });
 
 io.use((socket, next) => {
-  const userId = socket.handshake.auth.userId;
-  if (!userId) {
+
+  const {token, userId }= socket.handshake.auth;
+  if (!token) {
     return next(new Error("invalid username"));
   }
   socket.userId = userId;
