@@ -1,17 +1,25 @@
 import React from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
-  Box,
   Typography,
   Button,
   FormControl,
   TextField,
 } from "@material-ui/core";
 import { login } from "./store/utils/thunkCreators";
+import Banner from "./components/Sidebar/Banner";
+
+const useStyles = makeStyles(() => ({
+  root: {
+    height: "100vh",
+  },
+}));
 
 const Login = (props) => {
+  const classes = useStyles();
   const history = useHistory();
   const { user, login } = props;
 
@@ -26,10 +34,10 @@ const Login = (props) => {
   if (user.id) {
     return <Redirect to="/home" />;
   }
-
   return (
-    <Grid container justify="center">
-      <Box>
+    <Grid container justify="center" className={classes.root}>
+      <Banner />
+      <Grid container item xs={12} sm={8} md={7}>
         <Grid container item>
           <Typography>Need to register?</Typography>
           <Button onClick={() => history.push("/register")}>Register</Button>
@@ -61,7 +69,7 @@ const Login = (props) => {
             </Grid>
           </Grid>
         </form>
-      </Box>
+      </Grid>
     </Grid>
   );
 };
