@@ -11,8 +11,17 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 import { register } from "./store/utils/thunkCreators";
+import Banner from "./components/Sidebar/Banner";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(() => ({
+  root: {
+    height: "100vh",
+  },
+}));
 
 const Login = (props) => {
+  const classes = useStyles();
   const history = useHistory();
   const { user, register } = props;
   const [formErrorMessage, setFormErrorMessage] = useState({});
@@ -37,14 +46,19 @@ const Login = (props) => {
   }
 
   return (
-    <Grid container justify="center">
+    <Grid container justify="center" className={classes.root}>
+      <Banner/>
+      <Grid container xs={12} sm={8} md={7}>
       <Box>
         <Grid container item>
           <Typography>Need to log in?</Typography>
-          <Button onClick={() => history.push("/login")}>Login</Button>
+          <Button variant="outlined" color="primary" size="large" onClick={() => history.push("/login")}>Login</Button>
         </Grid>
         <form onSubmit={handleRegister}>
           <Grid>
+          <Typography variant="h5">
+              <strong>Create an account.</strong>
+            </Typography>
             <Grid>
               <FormControl>
                 <TextField
@@ -97,12 +111,13 @@ const Login = (props) => {
                 </FormHelperText>
               </FormControl>
             </Grid>
-            <Button type="submit" variant="contained" size="large">
+            <Button type="submit" variant="contained" size="large" color="primary">
               Create
             </Button>
           </Grid>
         </form>
       </Box>
+      </Grid>
     </Grid>
   );
 };

@@ -8,6 +8,7 @@ import {
   Button,
   FormControl,
   TextField,
+  Paper,
 } from "@material-ui/core";
 import { login } from "./store/utils/thunkCreators";
 import Banner from "./components/Sidebar/Banner";
@@ -15,6 +16,9 @@ import Banner from "./components/Sidebar/Banner";
 const useStyles = makeStyles(() => ({
   root: {
     height: "100vh",
+  },
+  form: {
+    // justifyItems: "center"
   },
 }));
 
@@ -37,13 +41,20 @@ const Login = (props) => {
   return (
     <Grid container justify="center" className={classes.root}>
       <Banner />
-      <Grid container item xs={12} sm={8} md={7}>
-        <Grid container item>
-          <Typography>Need to register?</Typography>
-          <Button onClick={() => history.push("/register")}>Register</Button>
+      <Grid container xs={12} sm={8} md={7} direction="row">
+        <Grid container spacing={3}  alignItems="center">
+          <Grid item>
+            <Typography>Need to register?</Typography>
+          </Grid>
+          <Grid item>
+            <Button variant="outlined" color="primary" size="large" onClick={() => history.push("/register")} >Register</Button>
+          </Grid>
         </Grid>
-        <form onSubmit={handleLogin}>
-          <Grid>
+          <form onSubmit={handleLogin}>
+        <Grid>
+            <Typography variant="h5">
+              <strong>Welcome back!</strong>
+            </Typography>
             <Grid>
               <FormControl margin="normal" required>
                 <TextField
@@ -63,12 +74,17 @@ const Login = (props) => {
               />
             </FormControl>
             <Grid>
-              <Button type="submit" variant="contained" size="large">
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                color="primary"
+              >
                 Login
               </Button>
             </Grid>
-          </Grid>
-        </form>
+        </Grid>
+          </form>
       </Grid>
     </Grid>
   );
