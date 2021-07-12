@@ -1,3 +1,4 @@
+import "./index.css";
 import React, { useState } from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
@@ -13,10 +14,31 @@ import {
 import { register } from "./store/utils/thunkCreators";
 import Banner from "./components/Sidebar/Banner";
 import { makeStyles } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { shadows } from "@material-ui/system";
 
 const useStyles = makeStyles(() => ({
   root: {
     height: "100vh",
+  },
+  switchTap: {
+    justifyContent: "flex-end",
+    margin: "3% 5%",
+  },
+  switchIcon: {
+    color: "#3A8DFF",
+    backgroundColor: "white",
+    width: "120%",
+  },
+  form: {
+    alignContent: "center",
+    textAlign: "center",
+    // margin: "2% 0",
+    padding: "2% 0",
+  },
+  heading: {
+    textAlign: "left",
+    margin: "0 0 2% 0",
   },
 }));
 
@@ -46,43 +68,62 @@ const Login = (props) => {
   }
 
   return (
-    <Grid container justify="center" className={classes.root}>
-      <Banner/>
-      <Grid container xs={12} sm={8} md={7}>
-      <Box>
-        <Grid container item>
-          <Typography>Need to log in?</Typography>
-          <Button variant="outlined" color="primary" size="large" onClick={() => history.push("/login")}>Login</Button>
+    <Grid container className={classes.root}>
+      <CssBaseline />
+      <Banner />
+      <Grid container xs={12} sm={8} md={7} style={{ height: "50%" }}>
+        <Grid container className={classes.switchTap} spacing={2}>
+          <Grid item style={{ margin: "1%" }}>
+            <Typography color="secondary" variant="caption">
+              Already have an account?
+            </Typography>{" "}
+          </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              className={classes.switchIcon}
+              size="large"
+              onClick={() => history.push("/login")}
+            >
+              Login
+            </Button>
+          </Grid>
         </Grid>
-        <form onSubmit={handleRegister}>
-          <Grid>
-          <Typography variant="h5">
+        <Grid container className={classes.form} direction="column">
+          <form onSubmit={handleRegister}>
+            <Typography variant="h5" className={classes.heading}>
               <strong>Create an account.</strong>
             </Typography>
-            <Grid>
-              <FormControl>
+            <Grid item>
+              <FormControl style={{ margin: "1% 0" }}>
                 <TextField
                   aria-label="username"
                   label="Username"
                   name="username"
                   type="text"
+                  fullWidth={true}
                   required
+                  style={{ width: 300 }}
                 />
               </FormControl>
             </Grid>
-            <Grid>
-              <FormControl>
+            <Grid item>
+              <FormControl style={{ margin: "1% 0" }}>
                 <TextField
                   label="E-mail address"
                   aria-label="e-mail address"
                   type="email"
                   name="email"
                   required
+                  style={{ width: 300 }}
                 />
               </FormControl>
             </Grid>
-            <Grid>
-              <FormControl error={!!formErrorMessage.confirmPassword}>
+            <Grid item>
+              <FormControl
+                error={!!formErrorMessage.confirmPassword}
+                style={{ margin: "1% 0" }}
+              >
                 <TextField
                   aria-label="password"
                   label="Password"
@@ -90,14 +131,18 @@ const Login = (props) => {
                   inputProps={{ minLength: 6 }}
                   name="password"
                   required
+                  style={{ width: 300 }}
                 />
                 <FormHelperText>
                   {formErrorMessage.confirmPassword}
                 </FormHelperText>
               </FormControl>
             </Grid>
-            <Grid>
-              <FormControl error={!!formErrorMessage.confirmPassword}>
+            <Grid item>
+              <FormControl
+                error={!!formErrorMessage.confirmPassword}
+                style={{ margin: "1% 0" }}
+              >
                 <TextField
                   label="Confirm Password"
                   aria-label="confirm password"
@@ -105,18 +150,25 @@ const Login = (props) => {
                   inputProps={{ minLength: 6 }}
                   name="confirmPassword"
                   required
+                  style={{ width: 300 }}
                 />
                 <FormHelperText>
                   {formErrorMessage.confirmPassword}
                 </FormHelperText>
               </FormControl>
             </Grid>
-            <Button type="submit" variant="contained" size="large" color="primary">
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              color="primary"
+              style={{ margin: "5% 0 0 0", width: "50%" }}
+            >
               Create
             </Button>
-          </Grid>
-        </form>
-      </Box>
+          </form>
+        </Grid>
+        {/* </Box> */}
       </Grid>
     </Grid>
   );
