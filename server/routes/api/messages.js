@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Conversation, Message } = require("../../db/models");
+const { Conversation, Message, User } = require("../../db/models");
 const onlineUsers = require("../../onlineUsers");
 
 // expects {recipientId, text, conversationId } in body (conversationId will be null if no conversation exists yet)
@@ -66,5 +66,23 @@ const validateConversation = async (conversationId, recipientId) => {
     recipientId === conversation.user2Id;
   return result;
 };
+
+router.put("/", async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+    const { senderId, conversationId } = req.body;
+    await Message.update(
+      { isRead: true },
+      { where: { senderId: senderId, conversationId: conversationId } }
+    );
+    const user = await User.getUser(senderId);
+    const conversations = await Conversation.findConversationByUserId(senderId);
+    res.json({ conversations: conversations, socket: user.socketId });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;
