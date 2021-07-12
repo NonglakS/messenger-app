@@ -4,7 +4,6 @@ import { Redirect, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   Grid,
-  Box,
   Typography,
   Button,
   FormControl,
@@ -14,10 +13,8 @@ import {
 import { register } from "./store/utils/thunkCreators";
 import Banner from "./components/Sidebar/Banner";
 import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { shadows } from "@material-ui/system";
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles(() => ({
   root: {
     height: "100vh",
   },
@@ -33,7 +30,6 @@ const useStyles = makeStyles(() => ({
   form: {
     alignContent: "center",
     textAlign: "center",
-    // margin: "2% 0",
     padding: "2% 0",
   },
   heading: {
@@ -69,7 +65,6 @@ const Login = (props) => {
 
   return (
     <Grid container className={classes.root}>
-      <CssBaseline />
       <Banner />
       <Grid container xs={12} sm={8} md={7} style={{ height: "50%" }}>
         <Grid container className={classes.switchTap} spacing={2}>
@@ -95,20 +90,19 @@ const Login = (props) => {
               <strong>Create an account.</strong>
             </Typography>
             <Grid item>
-              <FormControl style={{ margin: "1% 0" }}>
+              <FormControl>
                 <TextField
                   aria-label="username"
                   label="Username"
                   name="username"
                   type="text"
-                  fullWidth={true}
                   required
                   style={{ width: 300 }}
                 />
               </FormControl>
             </Grid>
             <Grid item>
-              <FormControl style={{ margin: "1% 0" }}>
+              <FormControl>
                 <TextField
                   label="E-mail address"
                   aria-label="e-mail address"
@@ -120,10 +114,7 @@ const Login = (props) => {
               </FormControl>
             </Grid>
             <Grid item>
-              <FormControl
-                error={!!formErrorMessage.confirmPassword}
-                style={{ margin: "1% 0" }}
-              >
+              <FormControl error={!!formErrorMessage.confirmPassword}>
                 <TextField
                   aria-label="password"
                   label="Password"
@@ -139,10 +130,7 @@ const Login = (props) => {
               </FormControl>
             </Grid>
             <Grid item>
-              <FormControl
-                error={!!formErrorMessage.confirmPassword}
-                style={{ margin: "1% 0" }}
-              >
+              <FormControl error={!!formErrorMessage.confirmPassword}>
                 <TextField
                   label="Confirm Password"
                   aria-label="confirm password"
@@ -168,7 +156,6 @@ const Login = (props) => {
             </Button>
           </form>
         </Grid>
-        {/* </Box> */}
       </Grid>
     </Grid>
   );
