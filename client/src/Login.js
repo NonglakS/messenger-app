@@ -31,7 +31,7 @@ const Login = (props) => {
   return (
     <Grid container justify="center" className={classes.root}>
       <Banner />
-      <Grid container xs={12} sm={8} md={7} style={{ height: "50%" }}>
+      <Grid container item xs={12} sm={8} md={7} style={{ height: "50%" }}>
         <Grid container className={classes.switchTap} spacing={2}>
           <Grid item style={{ margin: "1%" }}>
             <Typography color="secondary" variant="caption">

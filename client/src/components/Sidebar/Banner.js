@@ -25,9 +25,8 @@ const Banner = () => {
   const classes = useStyles();
   return (
     <Grid
-      container
+      container item
       alignItems="center"
-      justifyContent="center"
       xs={12}
       sm={4}
       md={5}
