@@ -31,9 +31,9 @@ const Login = (props) => {
   return (
     <Grid container justify="center" className={classes.root}>
       <Banner />
-      <Grid container item xs={12} sm={8} md={7} style={{ height: "50%" }}>
+      <Grid container item xs={12} sm={8} md={7} className={classes.gridForm}>
         <Grid container className={classes.switchTap} spacing={2}>
-          <Grid item style={{ margin: "1%" }}>
+          <Grid item>
             <Typography color="secondary" variant="caption">
               Need to register?
             </Typography>
@@ -55,13 +55,13 @@ const Login = (props) => {
               <strong>Welcome back!</strong>
             </Typography>
             <Grid>
-              <FormControl margin="normal" required style={{ margin: "1% 0" }}>
+              <FormControl margin="normal" required>
                 <TextField
                   aria-label="username"
                   label="Username"
                   name="username"
                   type="text"
-                  style={{ width: 300 }}
+                  className={classes.textField}
                 />
               </FormControl>
             </Grid>
@@ -71,7 +71,7 @@ const Login = (props) => {
                 aria-label="password"
                 type="password"
                 name="password"
-                style={{ width: 300 }}
+                className={classes.textField}
                 InputProps={{
                   endAdornment: (
                     <Typography
@@ -91,7 +91,7 @@ const Login = (props) => {
                 variant="contained"
                 size="large"
                 color="primary"
-                style={{ margin: "5% 0 0 0", width: "50%" }}
+                className={classes.button}
               >
                 Login
               </Button>

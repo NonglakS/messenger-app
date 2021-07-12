@@ -15,10 +15,10 @@ export const theme = createMuiTheme({
       input: {
         fontWeight: "bold"
       }
-    }
+    },
   },
   palette: {
     primary: { main: "#3A8DFF" },
     secondary: { main: "#B0B0B0" }
-  }
+  },
 });

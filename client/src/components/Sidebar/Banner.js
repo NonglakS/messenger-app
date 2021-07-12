@@ -4,11 +4,12 @@ import { Grid, Typography, Icon } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   image: {
-    backgroundImage: "url(/bg-img.png)",
+    // backgroundImage: "url(/bg-img.png)",
+    background:
+      "linear-gradient(rgba(68, 132, 255, 0.8), rgba(121,176,253, 0.9)), url(/bg-img.png)",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
     backgroundPosition: "center",
-    boxShadow: "inset 0 0 0 2000px rgba(58, 141, 255, 0.7)",
   },
   title: {
     color: "white",
@@ -25,7 +26,8 @@ const Banner = () => {
   const classes = useStyles();
   return (
     <Grid
-      container item
+      container
+      item
       alignItems="center"
       xs={12}
       sm={4}
@@ -36,7 +38,7 @@ const Banner = () => {
         <Icon component="div" className={classes.bubbleIcon}>
           <img alt="bubble-icon" src="./bubble.svg" />
         </Icon>
-        <Typography align="center" variant="h5" className={classes.title}>
+        <Typography align="center" variant="h6" className={classes.title}>
           Converse with anyone <br /> with any language
         </Typography>
       </Grid>

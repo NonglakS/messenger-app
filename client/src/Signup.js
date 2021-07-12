@@ -14,27 +14,38 @@ import { register } from "./store/utils/thunkCreators";
 import Banner from "./components/Sidebar/Banner";
 import { makeStyles } from "@material-ui/core/styles";
 
-export const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
   },
+  gridForm: {
+    height: "fit-content",
+  },
   switchTap: {
     justifyContent: "flex-end",
-    margin: "3% 5%",
+    margin: theme.spacing(2, 4),
+    alignItems: "center",
   },
   switchIcon: {
-    color: "#3A8DFF",
+    color: theme.palette.primary.main,
     backgroundColor: "white",
     width: "120%",
   },
   form: {
     alignContent: "center",
     textAlign: "center",
-    padding: "2% 0",
+    padding: theme.spacing(2, 4),
   },
   heading: {
     textAlign: "left",
-    margin: "0 0 2% 0",
+    margin: theme.spacing(5, 0, 2, 0),
+  },
+  textField: {
+    width: 300,
+  },
+  button: {
+    width: "50%",
+    margin: theme.spacing(3, 0),
   },
 }));
 
@@ -66,9 +77,9 @@ const Login = (props) => {
   return (
     <Grid container className={classes.root}>
       <Banner />
-      <Grid container item xs={12} sm={8} md={7} style={{ height: "50%" }}>
+      <Grid container item xs={12} sm={8} md={7} className={classes.gridForm}>
         <Grid container className={classes.switchTap} spacing={2}>
-          <Grid item style={{ margin: "1%" }}>
+          <Grid item>
             <Typography color="secondary" variant="caption">
               Already have an account?
             </Typography>{" "}
@@ -97,7 +108,7 @@ const Login = (props) => {
                   name="username"
                   type="text"
                   required
-                  style={{ width: 300 }}
+                  className={classes.textField}
                 />
               </FormControl>
             </Grid>
@@ -109,7 +120,7 @@ const Login = (props) => {
                   type="email"
                   name="email"
                   required
-                  style={{ width: 300 }}
+                  className={classes.textField}
                 />
               </FormControl>
             </Grid>
@@ -122,7 +133,7 @@ const Login = (props) => {
                   inputProps={{ minLength: 6 }}
                   name="password"
                   required
-                  style={{ width: 300 }}
+                  className={classes.textField}
                 />
                 <FormHelperText>
                   {formErrorMessage.confirmPassword}
@@ -138,7 +149,7 @@ const Login = (props) => {
                   inputProps={{ minLength: 6 }}
                   name="confirmPassword"
                   required
-                  style={{ width: 300 }}
+                  className={classes.textField}
                 />
                 <FormHelperText>
                   {formErrorMessage.confirmPassword}
@@ -150,7 +161,7 @@ const Login = (props) => {
               variant="contained"
               size="large"
               color="primary"
-              style={{ margin: "5% 0 0 0", width: "50%" }}
+              className={classes.button}
             >
               Create
             </Button>
