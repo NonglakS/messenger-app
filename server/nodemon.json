@@ -1,0 +1,6 @@
+{
+  "events": {
+    "restart": "kill-port 3001",
+    "crash": "kill-port 3001"
+  }
+}

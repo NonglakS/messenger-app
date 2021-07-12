@@ -3,6 +3,7 @@ import { FormControl, FilledInput } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { postMessage } from "../../store/utils/thunkCreators";
+import socket from "../../socket";
 
 const styles = {
   root: {
@@ -44,6 +45,14 @@ class Input extends Component {
     this.setState({
       text: "",
     });
+
+    //check on backend if the message has been read
+    socket.emit(
+      "check-message-status-by-active-user",
+      this.props.user,
+      this.props.otherUser.id,
+      this.props.conversationId
+    );
   };
 
   render() {
