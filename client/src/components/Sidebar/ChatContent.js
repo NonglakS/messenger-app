@@ -62,9 +62,9 @@ const ChatContent = (props) => {
           </Typography>
         )}
       </Box>
-      {unReadCount !== 0 ? (
+      {unReadCount && (
         <Badge className={classes.notification}>{unReadCount}</Badge>
-      ) : null}
+      )}
     </Box>
   );
 };
