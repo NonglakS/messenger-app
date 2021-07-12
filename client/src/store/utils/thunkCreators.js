@@ -16,7 +16,7 @@ export const fetchUser = () => async (dispatch) => {
     const { data } = await axios.get("/auth/user");
     dispatch(gotUser(data));
     if (data.id) {
-      socket.emit("go-online", data.id);
+      socket.emit("go-online", data.id, socket.id);
     }
   } catch (error) {
     console.error(error);
@@ -27,7 +27,9 @@ export const fetchUser = () => async (dispatch) => {
 
 export const register = (credentials) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/auth/register", credentials);
+    const { data } = await axios.post("/auth/register", credentials, {
+      params: { socketId: socket.id },
+    });
     dispatch(gotUser(data));
     //connect socket only after authentication
     socket.auth = { token: data.token, userId: data.id };
@@ -41,7 +43,9 @@ export const register = (credentials) => async (dispatch) => {
 
 export const login = (credentials) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/auth/login", credentials);
+    const { data } = await axios.post("/auth/login", credentials, {
+      params: { socketId: socket.id },
+    });
     dispatch(gotUser(data));
     socket.auth = { token: data.token, userId: data.id };
     socket.connect();
@@ -54,7 +58,7 @@ export const login = (credentials) => async (dispatch) => {
 
 export const logout = (id) => async (dispatch) => {
   try {
-    await axios.delete("/auth/logout");
+    await axios.delete("/auth/logout", { params: { id: id } });
     dispatch(gotUser({}));
     socket.emit("logout", id, socket.id);
   } catch (error) {
@@ -110,5 +114,29 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     dispatch(setSearchedUsers(data));
   } catch (error) {
     console.error(error);
+  }
+};
+
+const updateMessage = async (senderId, conversationId) => {
+  const { data } = await axios.put("/api/messages", {
+    senderId,
+    conversationId,
+  });
+  return data;
+};
+
+const sendUpdateMessage = (data, senderSockets) => {
+  socket.emit("update-message", data, senderSockets);
+};
+
+export const updateMessageStatus = async (senderId, conversationId) => {
+  try {
+    const data = await updateMessage(senderId, conversationId);
+    //only send send update-message if the sender is online
+    if (data.socket.length !== 0 || data.socket !== null) {
+      await sendUpdateMessage(data.conversations, data.socket);
+    }
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -37,7 +37,6 @@ const User = db.define("user", {
   },
   socketId: {
     type: Sequelize.ARRAY(Sequelize.TEXT),
-    unique: true,
     allowNull: true,
   },
 });
