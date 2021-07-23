@@ -6,9 +6,9 @@ import {
   addOnlineUser,
   gotConversations,
 } from "./store/conversations";
-
 import { updateMessageStatus } from "./store/utils/thunkCreators";
-const socket = io(window.location.origin);
+
+const socket = io(window.location.origin, { autoConnect: false });
 
 socket.on("connect", () => {
   console.log("connected to server");
@@ -22,10 +22,15 @@ socket.on("connect", () => {
   socket.on("new-message", (data) => {
     const state = store.getState();
     const activeChat = state.activeConversation;
+    console.log("active chat:", activeChat, "username", data.senderUsername);
     if (activeChat === data.senderUsername) {
+      console.log("active chat:", activeChat, "username", data.senderUsername);
       data.message.isRead = true;
     }
     store.dispatch(setNewMessage(data.message, data.sender));
+  });
+  socket.on("disconnect", () => {
+    console.log("socket is disconnected:", socket.disconnected);
   });
 
   socket.on("send-update-message", (data) => {

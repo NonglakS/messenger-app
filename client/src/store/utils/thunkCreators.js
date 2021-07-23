@@ -31,7 +31,10 @@ export const register = (credentials) => async (dispatch) => {
       params: { socketId: socket.id },
     });
     dispatch(gotUser(data));
-    socket.emit("go-online", data.id, socket.id);
+    //connect socket only after authentication
+    socket.auth = { token: data.token, userId: data.id };
+    socket.connect();
+    socket.emit("go-online", data.id);
   } catch (error) {
     console.error(error);
     dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
@@ -44,7 +47,9 @@ export const login = (credentials) => async (dispatch) => {
       params: { socketId: socket.id },
     });
     dispatch(gotUser(data));
-    socket.emit("go-online", data.id, socket.id);
+    socket.auth = { token: data.token, userId: data.id };
+    socket.connect();
+    socket.emit("go-online", data.id);
   } catch (error) {
     console.error(error);
     dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
@@ -55,7 +60,7 @@ export const logout = (id) => async (dispatch) => {
   try {
     await axios.delete("/auth/logout", { params: { id: id } });
     dispatch(gotUser({}));
-    socket.emit("logout", id);
+    socket.emit("logout", id, socket.id);
   } catch (error) {
     console.error(error);
   }
@@ -74,7 +79,6 @@ export const fetchConversations = () => async (dispatch) => {
 
 const saveMessage = async (body) => {
   const { data } = await axios.post("/api/messages", body);
-
   return data;
 };
 
@@ -121,15 +125,15 @@ const updateMessage = async (senderId, conversationId) => {
   return data;
 };
 
-const sendUpdateMessage = (data, senderSocket) => {
-  socket.emit("update-message", data, senderSocket);
+const sendUpdateMessage = (data, senderSockets) => {
+  socket.emit("update-message", data, senderSockets);
 };
 
 export const updateMessageStatus = async (senderId, conversationId) => {
   try {
     const data = await updateMessage(senderId, conversationId);
     //only send send update-message if the sender is online
-    if (data.socket) {
+    if (data.socket.length !== 0 || data.socket !== null) {
       await sendUpdateMessage(data.conversations, data.socket);
     }
   } catch (error) {
