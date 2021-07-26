@@ -62,7 +62,7 @@ const ChatContent = (props) => {
           </Typography>
         )}
       </Box>
-      {unReadCount !== 0 && (
+      {unReadCount > 0 && (
         <Badge className={classes.notification}>{unReadCount}</Badge>
       )}
     </Box>
