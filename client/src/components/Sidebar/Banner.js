@@ -4,7 +4,6 @@ import { Grid, Typography, Icon } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   image: {
-    // backgroundImage: "url(/bg-img.png)",
     background:
       "linear-gradient(rgba(68, 132, 255, 0.8), rgba(121,176,253, 0.9)), url(/bg-img.png)",
     backgroundRepeat: "no-repeat",
