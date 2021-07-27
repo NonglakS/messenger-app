@@ -25,13 +25,11 @@ describe("/POST register", () => {
     chai
       .request(API)
       .post(`/auth/register`)
-      .send({ username: "pam", password: "mysecret", email: "mail@mail.com"})
+      .send({ username: "emmi", password: "111111", email: "mymailto@mail.com"})
       .end((err, res) => {
-        console.log("res--------------", res)
         res.should.have.status(200)
-        // res.body.should.have
-        //   .property("cookie")
-        //   .eql("Username, password, and email required");
+        res.header.should.have
+          .property("set-cookie")
         done();
       });
   });
